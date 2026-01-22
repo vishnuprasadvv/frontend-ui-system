@@ -7,7 +7,8 @@ export const defaultTheme: ThemeConfig = {
   mode: 'light',
   colors: {
     // Brand Colors
-    primary: '222.2 47.4% 11.2%',
+    primary: '234 58.8% 44.7%',
+    // primary: '222.2 47.4% 11.2%',
     primaryForeground: '210 40% 98%',
     background: '0 0% 100%',
     foreground: '222.2 84% 4.9%',
@@ -347,4 +348,4 @@ export const nordicIce: ThemeConfig = {
   },
 };
 
-export const theme: ThemeConfig = midnightNeon;
+export const theme: ThemeConfig = defaultTheme;

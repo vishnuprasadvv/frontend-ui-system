@@ -7,3 +7,5 @@ export * from "./Pagination";
 export * from "./Sidebar";
 export * from "./ThemeSwitcher";
 export * from "./Progressbar";
+export * from "./Tabs";
+export * from "./Tooltip";
