@@ -1,20 +1,38 @@
 import * as React from "react";
 import { cn } from "../../../lib/utils";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export type InputSize = "sm" | "md" | "lg";
+
+export interface InputProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "size" | "prefix" | "suffix"
+> {
   label?: string;
+
   error?: React.ReactNode;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+  helperText?: React.ReactNode;
+
+  prefix?: React.ReactNode;
+  suffix?: React.ReactNode;
+
+  loading?: boolean;
+
+  size?: InputSize;
 
   containerClassName?: string;
   labelClassName?: string;
-  errorClassName?: string;
+  messageClassName?: string;
 
-  leftIconPadding?: number;
-  rightIconPadding?: number;
+  prefixPadding?: number;
+  suffixPadding?: number;
 }
+
+const sizeMap: Record<InputSize, string> = {
+  sm: "h-8 text-xs",
+  md: "h-10 text-sm",
+  lg: "h-12 text-base",
+};
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
@@ -22,21 +40,28 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       className,
       containerClassName,
       labelClassName,
-      errorClassName,
+      messageClassName,
       type,
       label,
       error,
-      leftIcon,
-      rightIcon,
-      leftIconPadding = 36,
-      rightIconPadding = 36,
+      helperText,
+      prefix,
+      suffix,
+      prefixPadding = 36,
+      suffixPadding = 36,
+      size = "md",
+      loading,
+      readOnly,
+      disabled,
       ...props
     },
     ref,
   ) => {
     const reactId = React.useId();
     const id = props.id ?? props.name ?? reactId;
-    const errorId = error ? `${id}-error` : undefined;
+
+    const message = error ?? helperText;
+    const messageId = message ? `${id}-message` : undefined;
 
     const [showPassword, setShowPassword] = React.useState(false);
 
@@ -45,7 +70,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className={cn("flex flex-col gap-1", containerClassName)}>
-        {label && id && (
+        {/* LABEL */}
+        {label && (
           <label
             htmlFor={id}
             className={cn(
@@ -57,10 +83,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </label>
         )}
 
+        {/* INPUT WRAPPER */}
         <div className="relative flex items-center">
-          {leftIcon && (
+          {prefix && (
             <div className="pointer-events-none absolute left-3 text-muted-foreground">
-              {leftIcon}
+              {prefix}
             </div>
           )}
 
@@ -69,38 +96,42 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={id}
             type={resolvedType}
             aria-invalid={!!error}
-            aria-describedby={errorId}
+            aria-describedby={messageId}
+            disabled={disabled || loading}
+            readOnly={readOnly}
             style={{
-              ...(leftIcon && {
-                ["--input-pl" as any]: `${leftIconPadding}px`,
+              ...(prefix && {
+                ["--input-pl" as any]: `${prefixPadding}px`,
               }),
-              ...(rightIcon || isPasswordInput
+              ...(suffix || isPasswordInput || loading
                 ? {
-                    ["--input-pr" as any]: `${rightIconPadding}px`,
+                    ["--input-pr" as any]: `${suffixPadding}px`,
                   }
                 : {}),
             }}
             className={cn(
-              "flex h-10 w-full rounded-md border border-input bg-background",
-              "px-2 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-primary/50",
-              // "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1",
-              // "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:outline-none focus-visible:ring-offset-0 focus-visible:border-primary",
+              "w-full rounded-md border border-input bg-background",
+              "px-2 py-2 text-foreground placeholder:text-muted-foreground",
+              "focus-visible:outline-2 focus-visible:outline-primary/50",
               "disabled:cursor-not-allowed disabled:opacity-50",
-              leftIcon && "pl-[var(--input-pl)]",
-              (rightIcon || isPasswordInput) && "pr-[var(--input-pr)]",
-              error && "border-destructive focus-visible:ring-destructive/30 focus-visible:outline-2 focus-visible:outline-destructive/50",
+
+              readOnly && "bg-muted/40 cursor-default",
+
+              sizeMap[size],
+
+              prefix && "pl-[var(--input-pl)]",
+              (suffix || isPasswordInput || loading) && "pr-[var(--input-pr)]",
+
+              error &&
+                "border-destructive focus-visible:ring-destructive/30 focus-visible:outline-2 focus-visible:outline-destructive/50",
+
               className,
             )}
             {...props}
           />
 
-          {rightIcon && !isPasswordInput && (
-            <div className="pointer-events-none absolute right-3 text-muted-foreground">
-              {rightIcon}
-            </div>
-          )}
-
-          {isPasswordInput && (
+          {/* PASSWORD */}
+          {isPasswordInput && !loading && (
             <button
               type="button"
               onClick={() => setShowPassword((p) => !p)}
@@ -114,18 +145,34 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               )}
             </button>
           )}
+
+          {/* LOADING */}
+          {loading && (
+            <div className="absolute right-3 animate-spin text-muted-foreground">
+              <Loader2 className="h-4 w-4" />
+            </div>
+          )}
+
+          {/* RIGHT ICON */}
+          {suffix && !isPasswordInput && !loading && (
+            <div className="pointer-events-none absolute right-3 text-muted-foreground">
+              {suffix}
+            </div>
+          )}
         </div>
 
+        {/* MESSAGE */}
         <p
-  id={errorId}
-  className={cn(
-    "min-h-[1.25rem] text-sm",
-    error ? "text-destructive" : "invisible",
-    errorClassName,
-  )}
->
-  {error ?? "placeholder"}
-</p>
+          id={messageId}
+          className={cn(
+            "min-h-[1.25rem] text-sm",
+            error ? "text-destructive" : "text-muted-foreground",
+            !message && "invisible",
+            messageClassName,
+          )}
+        >
+          {message ?? "placeholder"}
+        </p>
       </div>
     );
   },

@@ -48,12 +48,12 @@ function InputPlayground() {
       <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Default */}
         <Input 
-          placeholder="Enter your name" label="Name" error='Enter your name!' />
+          placeholder="Enter your name" label="Name" error='Enter your name' />
         {/* With Left Icon */}
         <Input
           placeholder="you@example.com"
           label="Email"
-          leftIcon={<Mail size={16} />}
+          prefix={<Mail size={16} />}
           {...register("email", {
             required: "Email is required",
           })}
