@@ -19,19 +19,69 @@ import {
   Plus,
   Download,
   Github,
-  MoonIcon,
 } from "lucide-react";
 import { ThemeProvider } from "./design-system/theme/ThemeProvider";
+import { Input } from "@/design-system/components/Input/Input";
+import { useForm } from "react-hook-form";
 import { ThemeSwitcher } from "./design-system/components/ThemeSwitcher/ThemeSwitcher";
 import { ConfirmationDialog, Tabs } from "./design-system";
 import { useState } from "react";
+
+// -----------------------------
+// INPUT PLAYGROUND COMPONENT
+// -----------------------------
+function InputPlayground() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<{ email: string; password: string }>();
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Input Component – Variants</CardTitle>
+        <CardDescription>
+          Visual test bed for states, icons, errors, and password toggles.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Default */}
+        <Input 
+          placeholder="Enter your name" label="Name" error='Enter your name!' />
+        {/* With Left Icon */}
+        <Input
+          placeholder="you@example.com"
+          label="Email"
+          leftIcon={<Mail size={16} />}
+          {...register("email", {
+            required: "Email is required",
+          })}
+        />
+
+        {/* Password */}
+        <Input
+          type="password"
+          placeholder="Enter your password..."
+          {...register("password", {
+            required: "Password is required",
+            minLength: { value: 6, message: "Min 6 characters" },
+          })}
+          error={errors.password?.message}
+        />
+
+        {/* Disabled */}
+        <Input label="Disabled" id="disabled" placeholder="Disabled field" disabled />
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function App() {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("tab1");
 
   const handleConfirm = async () => {
-    // Simulate async action
     return new Promise<void>((resolve) => {
       setTimeout(() => {
         alert("Action confirmed!");
@@ -92,7 +142,7 @@ export default function App() {
           </header>
 
           <div className="p-8 max-w-5xl mx-auto space-y-8">
-            {/* 1. BUTTONS GALLERY: The best way to see radius and color logic */}
+            {/* BUTTON GALLERY */}
             <section className="space-y-4">
               <h2 className="text-xl font-bold tracking-tight">
                 Component Gallery
@@ -105,7 +155,6 @@ export default function App() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {/* Standard Variants */}
                   <div className="flex flex-wrap gap-4">
                     <Button className="gap-2" leftIcon={<Plus size={16} />}>
                       Primary Action
@@ -131,7 +180,6 @@ export default function App() {
 
                   <hr className="border-border" />
 
-                  {/* Size & Social Variants */}
                   <div className="flex flex-wrap items-center gap-4">
                     <Button size="sm">Small</Button>
                     <Button size="lg" className="px-8">
@@ -158,7 +206,7 @@ export default function App() {
               </Card>
             </section>
 
-            {/* 2. STATUS GRID */}
+            {/* STATUS GRID */}
             <section className="space-y-4">
               <h2 className="text-xl font-bold tracking-tight">
                 Semantic Feedback
@@ -214,29 +262,7 @@ export default function App() {
               </div>
             </section>
 
-            {/* 3. INFORMATION PROTOCOL */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Theme Security Protocol</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-start gap-4 p-6 bg-muted/50 rounded-xl border border-dashed">
-                  <Info className="text-primary mt-1" size={24} />
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium leading-none">
-                      Global Variable Check
-                    </p>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      This environment is rendered using logic. Every button
-                      variant above uses <strong>var(--radius)</strong> which is
-                      currently set to <strong></strong>.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* EXAMPLE: Trigger Confirmation Dialog */}
+            {/* CONFIRMATION DIALOG TEST */}
             <Card>
               <CardHeader>
                 <CardTitle>Confirmation Dialog Test</CardTitle>
@@ -254,115 +280,126 @@ export default function App() {
               </CardContent>
             </Card>
 
+            {/* TABS TEST */}
+            {/* INPUT VARIANTS */}
+            <InputPlayground />
+
             <Tabs
-  tabs={[
-    {
-      value: "tab1",
-      label: "Dashboard",
-      content: (
-        <div className="space-y-6">
+              tabs={[
+                {
+                  value: "tab1",
+                  label: "Dashboard",
+                  content: (
+                    <div className="space-y-6">
+                      <h3 className="text-xl font-semibold">
+                        Dashboard Overview
+                      </h3>
 
-          <h3 className="text-xl font-semibold">Dashboard Overview</h3>
+                      <p className="text-muted-foreground leading-relaxed">
+                        This dashboard panel contains a long description to
+                        simulate real-world layouts. It helps verify scrolling
+                        behavior, spacing, line height, typography rhythm, and
+                        responsiveness across breakpoints. The purpose is to
+                        ensure the tab system behaves correctly even when
+                        content grows vertically or horizontally.
+                      </p>
 
-          <p className="text-muted-foreground leading-relaxed">
-            This dashboard panel contains a long description to simulate real-world
-            layouts. It helps verify scrolling behavior, spacing, line height,
-            typography rhythm, and responsiveness across breakpoints.
-            The purpose is to ensure the tab system behaves correctly even when
-            content grows vertically or horizontally.
-          </p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                          <div
+                            key={i}
+                            className="rounded-xl border bg-card p-6 shadow-sm"
+                          >
+                            <h4 className="font-medium mb-2">
+                              Metric Block {i + 1}
+                            </h4>
+                            <p className="text-sm text-muted-foreground">
+                              Lorem ipsum dolor sit amet, consectetur adipiscing
+                              elit. Integer nec odio. Praesent libero. Sed
+                              cursus ante dapibus diam. Sed nisi. Nulla quis sem
+                              at nibh elementum imperdiet.
+                            </p>
+                          </div>
+                        ))}
+                      </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="rounded-xl border bg-card p-6 shadow-sm"
-              >
-                <h4 className="font-medium mb-2">Metric Block {i + 1}</h4>
-                <p className="text-sm text-muted-foreground">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
-                  Sed nisi. Nulla quis sem at nibh elementum imperdiet.
-                </p>
-              </div>
-            ))}
-          </div>
+                      <div className="space-y-3">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                          <p key={i} className="text-sm leading-relaxed">
+                            Row {i + 1}: Pellentesque habitant morbi tristique
+                            senectus et netus et malesuada fames ac turpis
+                            egestas. Vestibulum tortor quam, feugiat vitae,
+                            ultricies eget, tempor sit amet, ante.
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  value: "tab2",
+                  label: "Payments",
+                  content: (
+                    <div className="space-y-5">
+                      <h3 className="text-xl font-semibold">Payment History</h3>
 
-          <div className="space-y-3">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <p key={i} className="text-sm leading-relaxed">
-                Row {i + 1}: Pellentesque habitant morbi tristique senectus et
-                netus et malesuada fames ac turpis egestas. Vestibulum tortor
-                quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
-              </p>
-            ))}
-          </div>
-        </div>
-      ),
-    },
-    {
-      value: "tab2",
-      label: "Payments",
-      content: (
-        <div className="space-y-5">
+                      <div className="space-y-3">
+                        {Array.from({ length: 12 }).map((_, i) => (
+                          <div
+                            key={i}
+                            className="flex justify-between border-b pb-3"
+                          >
+                            <span>Invoice #{1000 + i}</span>
+                            <span className="text-muted-foreground">
+                              $ {(i + 1) * 240}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
 
-          <h3 className="text-xl font-semibold">Payment History</h3>
+                      <p className="text-muted-foreground text-sm">
+                        Scroll through this list to ensure tab panels maintain
+                        layout integrity and do not overflow horizontally or
+                        collapse unexpectedly.
+                      </p>
+                    </div>
+                  ),
+                },
+                {
+                  value: "tab3",
+                  label: "Customers",
+                  content: (
+                    <div className="space-y-6">
+                      <h3 className="text-xl font-semibold">
+                        Customer Directory
+                      </h3>
 
-          <div className="space-y-3">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div
-                key={i}
-                className="flex justify-between border-b pb-3"
-              >
-                <span>Invoice #{1000 + i}</span>
-                <span className="text-muted-foreground">$ {(i + 1) * 240}</span>
-              </div>
-            ))}
-          </div>
-
-          <p className="text-muted-foreground text-sm">
-            Scroll through this list to ensure tab panels maintain layout integrity
-            and do not overflow horizontally or collapse unexpectedly.
-          </p>
-
-        </div>
-      ),
-    },
-    {
-      value: "tab3",
-      label: "Customers",
-      content: (
-        <div className="space-y-6">
-
-          <h3 className="text-xl font-semibold">Customer Directory</h3>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 9 }).map((_, i) => (
-              <div
-                key={i}
-                className="border rounded-xl p-5 bg-card"
-              >
-                <h4 className="font-medium">Customer {i + 1}</h4>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Joined: 2024-{i + 1}-12
-                </p>
-                <p className="text-sm mt-2 leading-relaxed">
-                  Customer description text goes here. This block exists only to
-                  expand vertical space and validate the UI under heavy content.
-                </p>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      ),
-    },
-  ]}
-  activeTab={activeTab}
-  onTabChange={setActiveTab}
-  fullWidth
-/>
-
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {Array.from({ length: 9 }).map((_, i) => (
+                          <div
+                            key={i}
+                            className="border rounded-xl p-5 bg-card"
+                          >
+                            <h4 className="font-medium">Customer {i + 1}</h4>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              Joined: 2024-{i + 1}-12
+                            </p>
+                            <p className="text-sm mt-2 leading-relaxed">
+                              Customer description text goes here. This block
+                              exists only to expand vertical space and validate
+                              the UI under heavy content.
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ),
+                },
+              ]}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              fullWidth
+            />
           </div>
         </main>
 
@@ -376,8 +413,8 @@ export default function App() {
           icon={<AlertTriangle className="text-red-500" size={32} />}
           onConfirm={handleConfirm}
           onCancel={() => setDialogOpen(false)}
-          isCancelButtonVisible={true}
-          isShowCloseButton={true}
+          isCancelButtonVisible
+          isShowCloseButton
           titleAlignment="center"
         />
       </div>
