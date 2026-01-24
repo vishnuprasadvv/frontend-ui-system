@@ -9,3 +9,4 @@ export * from "./ThemeSwitcher";
 export * from "./Progressbar";
 export * from "./Tabs";
 export * from "./Tooltip";
+export * from "./Input";

@@ -26,6 +26,7 @@ import { useForm } from "react-hook-form";
 import { ThemeSwitcher } from "./design-system/components/ThemeSwitcher/ThemeSwitcher";
 import { ConfirmationDialog, Tabs } from "./design-system";
 import { useState } from "react";
+import { PaginationDemo } from "./design-system/demo/PaginationDemo";
 
 // -----------------------------
 // INPUT PLAYGROUND COMPONENT
@@ -401,6 +402,15 @@ export default function App() {
               fullWidth
             />
           </div>
+
+          <section className="space-y-4">
+  <h2 className="text-xl font-bold tracking-tight">
+    Pagination Component Test
+  </h2>
+
+  <PaginationDemo />
+</section>
+
         </main>
 
         {/* CONFIRMATION DIALOG */}
