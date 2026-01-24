@@ -27,6 +27,8 @@ import { ThemeSwitcher } from "./design-system/components/ThemeSwitcher/ThemeSwi
 import { ConfirmationDialog, Tabs } from "./design-system";
 import { useState } from "react";
 import { PaginationDemo } from "./design-system/demo/PaginationDemo";
+import { DatePickerDemo } from "./design-system/demo/DatePickerDemo";
+import DropdownSelectorDemo from "./design-system/demo/DropdownSelectorDemo";
 
 // -----------------------------
 // INPUT PLAYGROUND COMPONENT
@@ -48,8 +50,11 @@ function InputPlayground() {
       </CardHeader>
       <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Default */}
-        <Input 
-          placeholder="Enter your name" label="Name" error='Enter your name' />
+        <Input
+          placeholder="Enter your name"
+          label="Name"
+          error="Enter your name"
+        />
         {/* With Left Icon */}
         <Input
           placeholder="you@example.com"
@@ -72,7 +77,12 @@ function InputPlayground() {
         />
 
         {/* Disabled */}
-        <Input label="Disabled" id="disabled" placeholder="Disabled field" disabled />
+        <Input
+          label="Disabled"
+          id="disabled"
+          placeholder="Disabled field"
+          disabled
+        />
       </CardContent>
     </Card>
   );
@@ -404,13 +414,26 @@ export default function App() {
           </div>
 
           <section className="space-y-4">
-  <h2 className="text-xl font-bold tracking-tight">
-    Pagination Component Test
-  </h2>
+            <h2 className="text-xl font-bold tracking-tight">
+              Pagination Component Test
+            </h2>
 
-  <PaginationDemo />
-</section>
+            <PaginationDemo />
+          </section>
+          <section className="space-y-4">
+            <h2 className="text-xl font-bold tracking-tight">
+              DatePicker Component Test
+            </h2>
 
+            <DatePickerDemo />
+          </section>
+          <section className="space-y-4">
+            <h2 className="text-xl font-bold tracking-tight">
+              Dropdown selector Component Test
+            </h2>
+
+            <DropdownSelectorDemo />
+          </section>
         </main>
 
         {/* CONFIRMATION DIALOG */}

@@ -18,71 +18,154 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import type { DateRange } from "react-day-picker";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../../../components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-export type Mode = "single" | "range" | "multiple";
+/* -------------------------------------------------------------------------- */
+/*                                   TYPES                                    */
+/* -------------------------------------------------------------------------- */
 
-export type DatePickerProps = {
-  mode?: Mode;
+type BaseProps = {
+  placeholder: string;
+
   disablePastDates?: boolean;
   minDate?: Date;
   maxDate?: Date;
-  label: string;
-  onChange?: (date: Date | Date[] | DateRange | undefined) => void;
-  defaultValue?: Date | Date[] | DateRange;
+
+  disabled?: boolean;
+  showTooltip?: boolean;
+
+  className?: string;
+  triggerClassName?: string;
 };
 
-export function DatePicker({
-  mode = "single",
-  disablePastDates = false,
-  minDate = new Date(2000, 0, 1),
-  maxDate = new Date(2050, 11, 31),
-  label,
-  onChange,
-  defaultValue,
-}: DatePickerProps) {
-  const [rangeValue, setRangeValue] = React.useState<DateRange | undefined>(
-    mode === "range" &&
-      typeof defaultValue === "object" &&
-      "from" in defaultValue
-      ? defaultValue
-      : { from: undefined, to: undefined }
+/* ---- MODE VARIANTS ---- */
+
+export type DatePickerProps =
+  | (BaseProps & {
+      mode?: "single";
+      value?: Date;
+      defaultValue?: Date;
+      onChange?: (date: Date | undefined) => void;
+    })
+  | (BaseProps & {
+      mode: "multiple";
+      value?: Date[];
+      defaultValue?: Date[];
+      onChange?: (date: Date[] | undefined) => void;
+    })
+  | (BaseProps & {
+      mode: "range";
+      value?: DateRange;
+      defaultValue?: DateRange;
+      onChange?: (date: DateRange | undefined) => void;
+    });
+
+/* -------------------------------------------------------------------------- */
+/*                                COMPONENT                                   */
+/* -------------------------------------------------------------------------- */
+
+export function DatePicker(props: DatePickerProps) {
+  const {
+    placeholder,
+    disablePastDates = false,
+    minDate = new Date(2000, 0, 1),
+    maxDate = new Date(2050, 11, 31),
+    disabled,
+    showTooltip = true,
+    className,
+    triggerClassName,
+  } = props;
+
+  const mode = props.mode ?? "single";
+
+  const isControlled = props.value !== undefined;
+
+  const months = React.useMemo(
+    () => [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ],
+    [],
   );
 
-  const [singleValue, setSingleValue] = React.useState<Date | undefined>(
-    mode === "single" && defaultValue instanceof Date ? defaultValue : undefined
+  /* ---------------------------------------------------------------------- */
+  /*                                  STATE                                 */
+  /* ---------------------------------------------------------------------- */
+
+  const [singleValue, setSingleValue] = React.useState<Date>();
+  const [multiValue, setMultiValue] = React.useState<Date[]>([]);
+  const [rangeValue, setRangeValue] = React.useState<DateRange>();
+
+  const [visibleMonth, setVisibleMonth] = React.useState<Date>(new Date());
+
+  /* --------------------- SYNC VALUE / MODE --------------------- */
+
+  React.useEffect(() => {
+    const src = isControlled ? props.value : props.defaultValue;
+
+    if (mode === "single") {
+      setSingleValue(src instanceof Date ? src : undefined);
+    }
+
+    if (mode === "multiple") {
+      setMultiValue(Array.isArray(src) ? src : []);
+    }
+
+    if (mode === "range") {
+      setRangeValue(
+        src && typeof src === "object" && "from" in src
+          ? (src as DateRange)
+          : undefined,
+      );
+    }
+
+    if (src instanceof Date) {
+      setVisibleMonth(src);
+    }
+
+    if (Array.isArray(src) && src[0] instanceof Date) {
+      setVisibleMonth(src[0]);
+    }
+
+    if (src && typeof src === "object" && "from" in src && src.from) {
+      setVisibleMonth(src.from);
+    }
+  }, [props.value, props.defaultValue, mode, isControlled]);
+
+  /* ---------------------------------------------------------------------- */
+  /*                                   YEARS                                */
+  /* ---------------------------------------------------------------------- */
+
+  const years = React.useMemo(
+    () =>
+      Array.from(
+        { length: maxDate.getFullYear() - minDate.getFullYear() + 1 },
+        (_, i) => minDate.getFullYear() + i,
+      ),
+    [minDate, maxDate],
   );
 
-  const [multiValue, setMultiValue] = React.useState<Date[]>(
-    Array.isArray(defaultValue) ? defaultValue : []
-  );
-
-  const [visibleMonth, setVisibleMonth] = React.useState(new Date());
-
-  const years = Array.from(
-    { length: maxDate.getFullYear() - minDate.getFullYear() + 1 },
-    (_, i) => minDate.getFullYear() + i
-  );
-
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+  /* ---------------------------------------------------------------------- */
+  /*                                 HANDLERS                               */
+  /* ---------------------------------------------------------------------- */
 
   const handleMonthChange = (month: string) => {
-    const newMonthIndex = months.indexOf(month);
     const updated = new Date(visibleMonth);
-    updated.setMonth(newMonthIndex);
+    updated.setMonth(months.indexOf(month));
     setVisibleMonth(updated);
   };
 
@@ -92,69 +175,88 @@ export function DatePicker({
     setVisibleMonth(updated);
   };
 
-  const handleDateChange = (value: Date | Date[] | DateRange | undefined) => {
-    if (mode === "range") {
-      setRangeValue(value as DateRange);
-    } else if (mode === "single") {
-      setSingleValue(value as Date);
-    } else {
-      setMultiValue(value as Date[]);
+  const handleDateChange = (val: Date | Date[] | DateRange | undefined) => {
+    if (!isControlled) {
+      if (mode === "single") setSingleValue(val as Date);
+      if (mode === "multiple") setMultiValue(val as Date[]);
+      if (mode === "range") setRangeValue(val as DateRange);
     }
-    onChange?.(value);
+
+    props.onChange?.(val as any);
   };
+
+  /* ---------------------------------------------------------------------- */
+  /*                                   LABEL                                */
+  /* ---------------------------------------------------------------------- */
 
   const renderLabel = () => {
+    if (mode === "single") {
+      return singleValue ? format(singleValue, "MMM dd, yyyy") : placeholder;
+    }
+
+    if (mode === "multiple") {
+      return multiValue.length
+        ? multiValue.map((d) => format(d, "MMM dd")).join(", ")
+        : placeholder;
+    }
+
     if (mode === "range") {
       if (rangeValue?.from && rangeValue.to) {
-        return `${format(rangeValue.from, "MMM dd")} - ${format(rangeValue.to, "MMM dd")}`;
-      } else if (rangeValue?.from) {
+        return `${format(rangeValue.from, "MMM dd")} - ${format(
+          rangeValue.to,
+          "MMM dd",
+        )}`;
+      }
+
+      if (rangeValue?.from) {
         return format(rangeValue.from, "MMM dd");
       }
-    } else if (mode === "single") {
-      return singleValue ? format(singleValue, "MMM dd, yyyy") : label;
-    } else if (mode === "multiple") {
-      return multiValue.length > 0
-        ? multiValue.map((d) => format(d, "MMM dd")).join(", ")
-        : label;
     }
-    return label;
+
+    return placeholder;
   };
 
+  const triggerButton = (
+    <Button
+      variant="outline"
+      disabled={disabled}
+      aria-haspopup="dialog"
+      className={cn(
+        "overflow-hidden truncate whitespace-nowrap justify-start text-left font-normal h-10 px-5",
+        !renderLabel() && "text-muted-foreground",
+        triggerClassName,
+      )}
+    >
+      <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
+      <span className="truncate">{renderLabel()}</span>
+    </Button>
+  );
+
+  /* ---------------------------------------------------------------------- */
+
   return (
-    <div className="grid gap-2">
+    <div className={cn("grid gap-2", className)}>
       <Popover>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <PopoverTrigger asChild>
-              <Button
-                id="date"
-                variant="outline"
-                className={cn(
-                  "max-w-[200px] overflow-hidden text-ellipsis truncate whitespace-nowrap justify-start text-left font-normal h-10 px-6 bg-white border-gray-200 rounded-full",
-                  ((mode === "range" && !rangeValue?.from) ||
-                    (mode === "single" && !singleValue) ||
-                    (mode === "multiple" && multiValue.length === 0)) &&
-                    "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                <span>{renderLabel()}</span>
-              </Button>
-            </PopoverTrigger>
-          </TooltipTrigger>
-          <TooltipContent className="flex-nowrap">
-            {renderLabel()}
-          </TooltipContent>
-        </Tooltip>
+        {showTooltip ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
+            </TooltipTrigger>
+            <TooltipContent>{renderLabel()}</TooltipContent>
+          </Tooltip>
+        ) : (
+          <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
+        )}
 
         <PopoverContent className="w-auto p-4" align="start">
-          <div className="flex flex-row justify-between gap-2 mb-4">
+          {/* HEADER */}
+          <div className="flex justify-between gap-2 mb-4">
             <Select
               onValueChange={handleMonthChange}
-              defaultValue={months[visibleMonth.getMonth()]}
+              value={months[visibleMonth.getMonth()]}
             >
               <SelectTrigger className="w-[130px] h-9">
-                <SelectValue placeholder="Month" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {months.map((month) => (
@@ -167,10 +269,10 @@ export function DatePicker({
 
             <Select
               onValueChange={handleYearChange}
-              defaultValue={visibleMonth.getFullYear().toString()}
+              value={visibleMonth.getFullYear().toString()}
             >
               <SelectTrigger className="w-[100px] h-9">
-                <SelectValue placeholder="Year" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {years.map((year) => (
@@ -182,47 +284,49 @@ export function DatePicker({
             </Select>
           </div>
 
-          {mode === "range" ? (
+          {/* CALENDAR */}
+          {mode === "range" && (
             <Calendar
               mode="range"
+              required={false}
               selected={rangeValue}
-              onSelect={handleDateChange}
-              numberOfMonths={1}
-              required={false} // required is valid only for range mode
-              initialFocus
-              defaultMonth={visibleMonth}
+              onSelect={(val) => handleDateChange(val)}
               month={visibleMonth}
               onMonthChange={setVisibleMonth}
+              numberOfMonths={1}
+              initialFocus
               disabled={{
                 before: disablePastDates ? new Date() : minDate,
                 after: maxDate,
               }}
             />
-          ) : mode === "multiple" ? (
+          )}
+
+          {mode === "multiple" && (
             <Calendar
               mode="multiple"
               selected={multiValue}
-              onSelect={handleDateChange}
-              numberOfMonths={1}
-              initialFocus
-              defaultMonth={visibleMonth}
+              onSelect={(val) => handleDateChange(val)}
               month={visibleMonth}
               onMonthChange={setVisibleMonth}
+              numberOfMonths={1}
+              initialFocus
               disabled={{
                 before: disablePastDates ? new Date() : minDate,
                 after: maxDate,
               }}
             />
-          ) : (
+          )}
+
+          {mode === "single" && (
             <Calendar
               mode="single"
               selected={singleValue}
-              onSelect={handleDateChange}
-              numberOfMonths={1}
-              initialFocus
-              defaultMonth={visibleMonth}
+              onSelect={(val) => handleDateChange(val)}
               month={visibleMonth}
               onMonthChange={setVisibleMonth}
+              numberOfMonths={1}
+              initialFocus
               disabled={{
                 before: disablePastDates ? new Date() : minDate,
                 after: maxDate,
