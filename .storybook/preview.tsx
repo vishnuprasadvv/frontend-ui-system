@@ -1,6 +1,6 @@
 import type { Preview } from "@storybook/react";
-import { ThemeProvider } from "../src/theme/ThemeProvider";
-import { defaultTheme, darkTheme, blueTheme } from "../src/theme/defaultTheme";
+import { ThemeProvider } from "../src/design-system/theme/ThemeProvider";
+import { defaultTheme, darkTheme, blueTheme, midnightNeon, forestMinimal, nordicIce } from "../src/design-system/theme/defaultTheme";
 import "../src/index.css";
 
 const preview: Preview = {
@@ -21,6 +21,9 @@ const preview: Preview = {
         light: defaultTheme,
         dark: darkTheme,
         blue: blueTheme,
+        midnightNeon: midnightNeon,
+        forest: forestMinimal,
+        nordicIce: nordicIce
       };
       
       const selectedTheme = themeMap[context.globals.theme as keyof typeof themeMap] || defaultTheme;
@@ -45,8 +48,10 @@ const preview: Preview = {
           { value: 'light', title: 'Light Theme', icon: 'sun' },
           { value: 'dark', title: 'Dark Theme', icon: 'moon' },
           { value: 'blue', title: 'Blue Theme', icon: 'circle' },
+          { value: 'midnightNeon', title: 'midnight Theme', icon: 'circle' },
+          { value: 'forest', title: 'forest minimal Theme', icon: 'circle' },
+          { value: 'nordicIce', title: 'Nordic Ice Theme', icon: 'circle' },
         ],
-        showName: true,
         dynamicTitle: true,
       },
     },

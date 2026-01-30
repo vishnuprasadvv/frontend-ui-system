@@ -30,7 +30,7 @@ export default function DropdownSelectorDemo() {
         {accountType && (
           <p className="text-sm text-muted-foreground">
             Selected value:{" "}
-            <span className="font-medium text-black">{accountType}</span>
+            <span className="font-medium">{accountType}</span>
           </p>
         )}
       </Card>

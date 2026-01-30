@@ -220,10 +220,11 @@ export function DatePicker(props: DatePickerProps) {
     <Button
       variant="outline"
       disabled={disabled}
-      aria-haspopup="dialog"
       className={cn(
         "overflow-hidden truncate whitespace-nowrap justify-start text-left font-normal h-10 px-5",
-        !renderLabel() && "text-muted-foreground",
+        (mode === "single" ? !singleValue : 
+        mode === "multiple" ? multiValue.length === 0 : 
+        !rangeValue?.from) && "text-muted-foreground",
         triggerClassName,
       )}
     >

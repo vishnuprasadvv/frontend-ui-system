@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   CheckCircle2,
   AlertTriangle,
-  Info,
   TrendingUp,
   Bell,
   Settings,
@@ -29,6 +28,8 @@ import { useState } from "react";
 import { PaginationDemo } from "./design-system/demo/PaginationDemo";
 import { DatePickerDemo } from "./design-system/demo/DatePickerDemo";
 import DropdownSelectorDemo from "./design-system/demo/DropdownSelectorDemo";
+import {ProgressBarDemo} from "./design-system/demo/ProgressbarDemo";
+import SelectDemo from "./design-system/demo/SelectDemo";
 
 // -----------------------------
 // INPUT PLAYGROUND COMPONENT
@@ -434,6 +435,20 @@ export default function App() {
 
             <DropdownSelectorDemo />
           </section>
+          <section className="space-y-4">
+            <h2 className="text-xl font-bold tracking-tight">
+              Progressbar Component Test
+            </h2>
+            <ProgressBarDemo />
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-xl font-bold tracking-tight">
+              Select Component Test
+            </h2>
+            <SelectDemo />
+          </section>
+          
         </main>
 
         {/* CONFIRMATION DIALOG */}

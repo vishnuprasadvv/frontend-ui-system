@@ -69,6 +69,7 @@ export const defaultTheme: ThemeConfig = {
   spacing: {
     radius: {
       none: '0',
+      xs: '0.125rem',
       sm: '0.25rem',
       md: '0.5rem',
       lg: '0.75rem',
@@ -176,6 +177,7 @@ export const blueTheme: ThemeConfig = {
   spacing: {
     radius: {
       none: '0',
+      xs: '0.25rem',
       sm: '0.375rem',
       md: '0.5rem',
       lg: '0.75rem',
@@ -230,6 +232,7 @@ export const midnightNeon: ThemeConfig = {
   spacing: {
     radius: {
       none: '0px',
+      xs: '0px',
       sm: '0px',
       md: '0px', // Sharp developer look
       lg: '0px',
@@ -284,6 +287,7 @@ export const forestMinimal: ThemeConfig = {
   spacing: {
     radius: {
       none: '0px',
+      xs: '0.25rem',
       sm: '0.5rem',
       md: '1rem', // Extra rounded
       lg: '1.5rem',
@@ -338,6 +342,7 @@ export const nordicIce: ThemeConfig = {
   spacing: {
     radius: {
       none: '0px',
+      xs: '0.1rem',
       sm: '0.2rem',
       md: '0.4rem',
       lg: '0.6rem',

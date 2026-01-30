@@ -56,6 +56,7 @@ export interface ThemeTypography {
 export interface ThemeSpacing {
   radius: {
     none: string;
+    xs: string;
     sm: string;
     md: string;
     lg: string;

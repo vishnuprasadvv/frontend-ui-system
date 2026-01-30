@@ -10,6 +10,7 @@
   /* --- Explicit Radius Tokens --- */
   /* These pull directly from the root variables set in your ThemeConfig */
   --radius-none: var(--radius-none);
+  --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
@@ -126,6 +127,7 @@
     This forces every Shadcn component to obey the dynamic variables
     set in your ThemeConfig.
   */
+  .rounded-xs { border-radius: var(--radius-xs) !important; }
   .rounded-sm { border-radius: var(--radius-sm) !important; }
   .rounded-md { border-radius: var(--radius-md) !important; }
   .rounded-lg { border-radius: var(--radius-lg) !important; }
