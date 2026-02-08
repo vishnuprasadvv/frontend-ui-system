@@ -31,6 +31,7 @@ import DropdownSelectorDemo from "./design-system/demo/DropdownSelectorDemo";
 import {ProgressBarDemo} from "./design-system/demo/ProgressbarDemo";
 import SelectDemo from "./design-system/demo/SelectDemo";
 import ComboboxDemo from "./design-system/demo/ComboboxDemo";
+import TextareaDemo from "./design-system/demo/TextareaDemo";
 
 // -----------------------------
 // INPUT PLAYGROUND COMPONENT
@@ -450,8 +451,9 @@ export default function App() {
             <SelectDemo />
           </section>
 
-         
             <ComboboxDemo />
+
+            <TextareaDemo />
           
         </main>
 
