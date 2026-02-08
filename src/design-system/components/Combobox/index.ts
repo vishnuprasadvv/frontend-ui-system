@@ -1,2 +1,2 @@
 export { Combobox } from './selectCombobox';
-export type { ComboboxProps } from './selectCombobox';
+export type { ComboboxProps, ComboboxOption } from './selectCombobox';

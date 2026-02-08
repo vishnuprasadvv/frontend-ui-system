@@ -60,7 +60,7 @@ type MultiProps = BaseProps & {
   multiple: true;
   value?: ComboboxOption[] | null;
   onChange?: (value: ComboboxOption[]) => void;
-  showClear?: never;
+  showClear?: false;
 };
 
 export type ComboboxProps = SingleProps | MultiProps;

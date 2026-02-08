@@ -36,8 +36,7 @@ export const defaultTheme: ThemeConfig = {
     mutedForeground: '215.4 16.3% 46.9%',
     border: '214.3 31.8% 91.4%',
     input: '214.3 31.8% 91.4%',
-    // ring: '222.2 84% 4.9%',
-    ring: '110 84% 43.1%',
+    ring: '222.2 84% 4.9%',
   },
   typography: {
     fontFamily: {
