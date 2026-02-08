@@ -5,8 +5,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
-import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
 export interface SelectOption {
@@ -54,7 +52,7 @@ export const Select = ({
   options,
   placeholder = 'Select an option',
   disabled,
-  required,
+  required = true,
   size = 'md',
   error,
   helperText,
@@ -63,12 +61,12 @@ export const Select = ({
   const id = `select-${label?.replace(/\s+/g, '-').toLowerCase()}`;
 
   return (
-    <div className="flex w-full flex-col gap-1.5">
+    <div className="flex w-full flex-col gap-1">
       {label && (
-        <Label htmlFor={id} className="flex gap-1">
+        <label htmlFor={id} className={cn('text-sm font-medium text-foreground')}>
           {label}
-          {required && <span className="text-destructive">*</span>}
-        </Label>
+          {required && <span className="text-destructive ml-1">*</span>}
+        </label>
       )}
 
       <SelectRoot value={value} onValueChange={onChange} disabled={disabled}>

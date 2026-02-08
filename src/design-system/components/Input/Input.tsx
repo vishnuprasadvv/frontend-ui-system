@@ -112,7 +112,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className={cn(
               "w-full rounded-md border border-input bg-background",
               "px-2 py-2 text-foreground placeholder:text-muted-foreground",
-              "focus-visible:outline-2 focus-visible:outline-primary/50",
+              // "focus-visible:outline-2 focus-visible:outline-ring/50",
+              "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-2 outline-none",
               "disabled:cursor-not-allowed disabled:opacity-50",
 
               readOnly && "bg-muted/40 cursor-default",
@@ -123,7 +124,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               (suffix || isPasswordInput || loading) && "pr-[var(--input-pr)]",
 
               error &&
-                "border-destructive focus-visible:ring-destructive/30 focus-visible:outline-2 focus-visible:outline-destructive/50",
+                "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/30",
 
               className,
             )}

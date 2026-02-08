@@ -30,6 +30,7 @@ import { DatePickerDemo } from "./design-system/demo/DatePickerDemo";
 import DropdownSelectorDemo from "./design-system/demo/DropdownSelectorDemo";
 import {ProgressBarDemo} from "./design-system/demo/ProgressbarDemo";
 import SelectDemo from "./design-system/demo/SelectDemo";
+import ComboboxDemo from "./design-system/demo/ComboboxDemo";
 
 // -----------------------------
 // INPUT PLAYGROUND COMPONENT
@@ -448,6 +449,9 @@ export default function App() {
             </h2>
             <SelectDemo />
           </section>
+
+         
+            <ComboboxDemo />
           
         </main>
 
