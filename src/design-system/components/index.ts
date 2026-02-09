@@ -16,3 +16,4 @@ export * from './Radio';
 export * from './Switch';
 export * from './Combobox';
 export * from './Textarea';
+export * from './Toast';

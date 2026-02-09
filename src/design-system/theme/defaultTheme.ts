@@ -213,7 +213,7 @@ export const midnightNeon: ThemeConfig = {
     mutedForeground: '180 20% 60%',
     secondary: '230 25% 12%',
     secondaryForeground: '180 100% 50%',
-    accent: '180 100% 50%',
+    accent: '220 30% 15%',
     accentForeground: '230 25% 100%',
     border: '180 100% 50% / 0.2',
     input: '230 25% 20%',
