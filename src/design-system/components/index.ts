@@ -20,3 +20,4 @@ export * from './Toast';
 export * from './Seperator';
 export * from './Table';
 export * from './Badge';
+export * from './Navbar';
