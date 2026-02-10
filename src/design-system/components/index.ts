@@ -19,3 +19,4 @@ export * from './Textarea';
 export * from './Toast';
 export * from './Seperator';
 export * from './Table';
+export * from './Badge';
