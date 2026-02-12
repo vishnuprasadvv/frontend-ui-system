@@ -1,4 +1,6 @@
+export * from './Avatar';
 export * from './Button';
+export * from './Checkbox';
 export * from './ConfirmDialog';
 export * from './DatePicker';
 export * from './DropdownSelector';

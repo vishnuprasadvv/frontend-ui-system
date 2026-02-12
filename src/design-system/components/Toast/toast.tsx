@@ -56,7 +56,30 @@ const Toaster = ({ ...props }: ToasterProps) => {
  * Custom wrapper to ensure consistent title/description structure
  * and to prevent "empty" toasts.
  */
-export const toast = {
+export interface ToastApi {
+  default: (title: string, description?: string) => string | number
+  success: (title: string, description?: string) => string | number
+  error: (title: string, description?: string) => string | number
+  warning: (title: string, description?: string) => string | number
+  info: (title: string, description?: string) => string | number
+  loading: (title: string) => string | number
+
+  action: (
+    title: string,
+    description: string,
+    label: string,
+    onClick: () => void
+  ) => string | number
+
+  dismiss: (id?: string | number) => void
+
+  promise: (
+    promise: Promise<unknown>,
+    options: Parameters<typeof sonnerToast.promise>[1]
+  ) => unknown
+}
+
+export const toast: ToastApi = {
   default: (title: string, description?: string) =>
     sonnerToast(title, { description }),
 
@@ -72,18 +95,19 @@ export const toast = {
   info: (title: string, description?: string) =>
     sonnerToast.info(title, { description }),
 
-  loading: (title: string) => 
+  loading: (title: string) =>
     sonnerToast.loading(title),
 
-  // For complex toasts with actions
-  action: (title: string, description: string, label: string, onClick: () => void) =>
+  action: (title, description, label, onClick) =>
     sonnerToast(title, {
       description,
       action: { label, onClick },
     }),
 
-  dismiss: (id?: string | number) => sonnerToast.dismiss(id),
-  promise: sonnerToast.promise,
+  dismiss: (id) => sonnerToast.dismiss(id),
+
+  promise: (promise, options) =>
+    sonnerToast.promise(promise, options),
 }
 
 export { Toaster }
