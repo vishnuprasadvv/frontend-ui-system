@@ -33,6 +33,7 @@ import SelectDemo from "./design-system/demo/SelectDemo";
 import ComboboxDemo from "./design-system/demo/ComboboxDemo";
 import TextareaDemo from "./design-system/demo/TextareaDemo";
 import TableDemo from "./design-system/demo/TableDemo";
+import { FileUploadDemo } from "./design-system/demo/File-uploadDemo";
 
 // -----------------------------
 // INPUT PLAYGROUND COMPONENT
@@ -457,6 +458,8 @@ export default function App() {
             <TextareaDemo />
             
             <TableDemo />
+
+            <FileUploadDemo />
           
         </main>
 

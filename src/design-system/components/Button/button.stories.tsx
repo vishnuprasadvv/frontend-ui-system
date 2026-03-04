@@ -3,7 +3,7 @@ import { Mail, Loader2 } from 'lucide-react';
 import { Button } from './button';
 
 const meta = {
-  title: 'UI/Button',
+  title: 'components/Button',
   component: Button,
   parameters: {
     layout: 'centered',

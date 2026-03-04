@@ -3,7 +3,7 @@ import { Input } from "./Input";
 import { Mail } from "lucide-react";
 
 const meta: Meta<typeof Input> = {
-  title: "UI/Input",
+  title: "components/Input",
   component: Input,
   parameters: {
     layout: "centered",
