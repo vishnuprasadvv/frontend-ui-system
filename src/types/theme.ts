@@ -73,11 +73,41 @@ export interface ThemeSpacing {
   };
 }
 
+
+/**
+ * Complete theme configuration with support for light and dark modes.
+ * 
+ * @property mode - Current theme mode ('light' or 'dark')
+ * @property lightColors - Color palette for light mode
+ * @property darkColors - Color palette for dark mode
+ * @property typography - Font settings (applies to both modes)
+ * @property spacing - Spacing and radius settings (applies to both modes)
+ * 
+ * @example
+ * ```typescript
+ * const theme: ThemeConfig = {
+ *   mode: 'light',
+ *   lightColors: {
+ *     background: '0 0% 100%',
+ *     foreground: '222.2 84% 4.9%',
+ *     // ... other light colors
+ *   },
+ *   darkColors: {
+ *     background: '222.2 84% 4.9%',
+ *     foreground: '210 40% 98%',
+ *     // ... other dark colors
+ *   },
+ *   typography: { ... },
+ *   spacing: { ... }
+ * }
+ * ```
+ */
 export interface ThemeConfig {
-  colors: ThemeColors;
+  mode: "light" | "dark";
+  lightColors: ThemeColors;
+  darkColors: ThemeColors;
   typography: ThemeTypography;
   spacing: ThemeSpacing;
-  mode: 'light' | 'dark';
 }
 
 export interface APIThemeResponse {

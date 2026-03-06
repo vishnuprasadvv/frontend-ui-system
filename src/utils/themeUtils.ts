@@ -1,36 +1,39 @@
-import { type ThemeColors, type ThemeConfig } from '../types/theme';
+import { type ThemeColors, type ThemeConfig, type ThemeSpacing, type ThemeTypography } from "../types/theme";
 
 /**
- * Applies theme configuration to the document root
+ * Applies theme configuration to the document root.
+ * Automatically uses lightColors or darkColors based on theme.mode.
  */
 export const applyTheme = (theme: ThemeConfig): void => {
   const root = document.documentElement;
 
+  // Determine which colors to apply based on current mode
+  const colorsToApply = theme.mode === "dark" ? theme.darkColors : theme.lightColors;
+
   // Apply color variables
-  Object.entries(theme.colors).forEach(([key, value]) => {
+  Object.entries(colorsToApply).forEach(([key, value]) => {
     const cssVarName = `--${camelToKebab(key)}`;
-    
+
     // Clean the value: if it's "hsl(222 47% 11%)", convert to "222 47% 11%"
-    const cleanValue = value.replace(/hsl\((.*)\)/, '$1').replace(/,/g, '');
-    
+    const cleanValue = value.replace(/hsl\((.*)\)/, "$1").replace(/,/g, "");
+
     root.style.setProperty(cssVarName, cleanValue);
   });
 
   // Apply typography
-  root.style.setProperty('--font-sans', theme.typography.fontFamily.sans);
-  root.style.setProperty('--font-serif', theme.typography.fontFamily.serif);
-  root.style.setProperty('--font-mono', theme.typography.fontFamily.mono);
+  root.style.setProperty("--font-sans", theme.typography.fontFamily.sans);
+  root.style.setProperty("--font-serif", theme.typography.fontFamily.serif);
+  root.style.setProperty("--font-mono", theme.typography.fontFamily.mono);
 
-  // Apply radius - This ensures the base --radius is set for our math
-  root.style.setProperty('--radius', theme.spacing.radius.md);
-  
+  // Apply radius
+  root.style.setProperty("--radius", theme.spacing.radius.md);
+
   Object.entries(theme.spacing.radius).forEach(([key, value]) => {
-    // This creates --radius-sm, --radius-md, etc.
     root.style.setProperty(`--radius-${key}`, value);
   });
 
-  // Apply theme mode
-  root.classList.remove('light', 'dark');
+  // Apply theme mode class
+  root.classList.remove("light", "dark");
   root.classList.add(theme.mode);
 };
 
@@ -38,14 +41,14 @@ export const applyTheme = (theme: ThemeConfig): void => {
  * Convert camelCase to kebab-case
  */
 const camelToKebab = (str: string): string => {
-  return str.replace(/([A-Z])/g, '-$1').toLowerCase();
+  return str.replace(/([A-Z])/g, "-$1").toLowerCase();
 };
 
 /**
  * Convert hex color to HSL format for Tailwind
  */
 export const hexToHSL = (hex: string): string => {
-  hex = hex.replace('#', '');
+  hex = hex.replace("#", "");
 
   const r = parseInt(hex.substring(0, 2), 16) / 255;
   const g = parseInt(hex.substring(2, 4), 16) / 255;
@@ -112,15 +115,17 @@ export const rgbToHSL = (r: number, g: number, b: number): string => {
 };
 
 /**
- * Merge theme configurations
+ * Merge theme configurations.
+ * Properly handles both lightColors and darkColors.
  */
 export const mergeThemes = (
   baseTheme: ThemeConfig,
-  overrides: Partial<ThemeConfig>
+  overrides: Partial<ThemeConfig>,
 ): ThemeConfig => {
   return {
     mode: overrides.mode ?? baseTheme.mode,
-    colors: { ...baseTheme.colors, ...(overrides.colors || {}) },
+    lightColors: { ...baseTheme.lightColors, ...(overrides.lightColors || {}) },
+    darkColors: { ...baseTheme.darkColors, ...(overrides.darkColors || {}) },
     typography: {
       fontFamily: {
         ...baseTheme.typography.fontFamily,
@@ -153,19 +158,31 @@ export const mergeThemes = (
 };
 
 /**
- * Validate theme configuration
+ * Validate theme configuration.
+ * Ensures both lightColors and darkColors are present and valid.
  */
 export const validateTheme = (theme: Partial<ThemeConfig>): boolean => {
   try {
-    if (theme.mode && !['light', 'dark'].includes(theme.mode)) {
-      console.error('Invalid theme mode');
+    if (theme.mode && !["light", "dark"].includes(theme.mode)) {
+      console.error("Invalid theme mode");
       return false;
     }
 
-    if (theme.colors) {
-      for (const [key, value] of Object.entries(theme.colors)) {
-        if (typeof value !== 'string' || value.trim() === '') {
-          console.error(`Invalid color value for ${key}`);
+    // Validate light colors if present
+    if (theme.lightColors) {
+      for (const [key, value] of Object.entries(theme.lightColors)) {
+        if (typeof value !== "string" || value.trim() === "") {
+          console.error(`Invalid light color value for ${key}`);
+          return false;
+        }
+      }
+    }
+
+    // Validate dark colors if present
+    if (theme.darkColors) {
+      for (const [key, value] of Object.entries(theme.darkColors)) {
+        if (typeof value !== "string" || value.trim() === "") {
+          console.error(`Invalid dark color value for ${key}`);
           return false;
         }
       }
@@ -173,7 +190,7 @@ export const validateTheme = (theme: Partial<ThemeConfig>): boolean => {
 
     return true;
   } catch (error) {
-    console.error('Theme validation error:', error);
+    console.error("Theme validation error:", error);
     return false;
   }
 };
@@ -181,11 +198,37 @@ export const validateTheme = (theme: Partial<ThemeConfig>): boolean => {
 /**
  * Generate complementary colors for a theme
  */
-export const generateThemeVariations = (baseColor: string): Partial<ThemeColors> => {
+export const generateThemeVariations = (
+  baseColor: string,
+): Partial<ThemeColors> => {
   // This is a simplified example - you could use a color manipulation library
   return {
     primary: baseColor,
     secondary: baseColor, // Could calculate a lighter/darker variation
     accent: baseColor, // Could calculate a complementary color
+  };
+};
+
+/**
+ * Helper to create a theme with same colors for light and dark mode.
+ * Useful when you want a single-mode theme.
+ * 
+ * @example
+ * ```typescript
+ * const singleModeTheme = createSingleModeTheme(colors, typography, spacing);
+ * ```
+ */
+export const createSingleModeTheme = (
+  colors: ThemeColors,
+  typography: ThemeTypography,
+  spacing: ThemeSpacing,
+  mode: "light" | "dark" = "light"
+): ThemeConfig => {
+  return {
+    mode,
+    lightColors: colors,
+    darkColors: colors, // Same colors for both modes
+    typography,
+    spacing,
   };
 };

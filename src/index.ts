@@ -1,6 +1,6 @@
 // Theme System
 export { ThemeProvider, useTheme } from './design-system/theme/ThemeProvider';
-export { defaultTheme, darkTheme, blueTheme } from './design-system/theme/defaultTheme';
+export { defaultTheme, blueTheme } from './design-system/theme/defaultTheme';
 export * from './types/theme';
 export * from './utils/themeUtils';
 

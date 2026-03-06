@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '../../../components/ui/dropdown-menu';
 import { Moon, Sun, Palette } from 'lucide-react';
-import { defaultTheme, darkTheme, blueTheme } from '../../theme/defaultTheme';
+import { defaultTheme, blueTheme, nordicIce, midnightNeon } from '../../theme/defaultTheme';
 
 export const ThemeSwitcher: React.FC = () => {
   const { theme, setTheme, toggleMode } = useTheme();
@@ -33,8 +33,11 @@ export const ThemeSwitcher: React.FC = () => {
           <DropdownMenuItem onClick={() => setTheme(defaultTheme)}>
             Default Theme
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme(darkTheme)}>
-            Dark Theme
+          <DropdownMenuItem onClick={() => setTheme(nordicIce)}>
+            Nordic ice Theme
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme(midnightNeon)}>
+             Midnight neon Theme
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setTheme(blueTheme)}>
             Blue Theme

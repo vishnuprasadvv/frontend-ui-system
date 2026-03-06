@@ -119,8 +119,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
               sizeMap[size],
 
-              prefix && "pl-[var(--input-pl)]",
-              (suffix || isPasswordInput || loading) && "pr-[var(--input-pr)]",
+              prefix && "pl-(--input-pl)",
+              (suffix || isPasswordInput || loading) && "pr-(--input-pr)",
 
               error &&
                 "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/30",
@@ -165,7 +165,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <p
           id={messageId}
           className={cn(
-            "min-h-[1.25rem] text-sm",
+            "min-h-5 text-sm",
             error ? "text-destructive" : "text-muted-foreground",
             !message && "invisible",
             messageClassName,
